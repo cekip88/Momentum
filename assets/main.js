@@ -61,7 +61,7 @@ class Momentum {
             minutes = _.dateLengthCheck(date.getMinutes() + ''),
             seconds = _.dateLengthCheck(date.getSeconds() + '');
 
-        let time = hours + '.' + minutes + '.' + seconds;
+        let time = hours + ':' + minutes + ':' + seconds;
         return time
     }
     getDate(date){
@@ -92,15 +92,26 @@ class Momentum {
         if(localStorage.getItem('name') === '') localStorage.setItem('name','[введите имя]');
         _.nameInputTag.textContent = localStorage.getItem('name');
 
+        function enterName(){
+            if(_.nameInputTag.textContent === '') _.nameInputTag.textContent = localStorage.getItem('name');
+            else localStorage.setItem('name',_.nameInputTag.textContent);
+        }
+
         _.nameInputTag.addEventListener('focus',function (e) {
             setTimeout(function () {
                 _.nameInputTag.textContent = '';
             },10);
         });
         _.nameInputTag.addEventListener('focusout',function (e) {
-            if(_.nameInputTag.textContent === '') _.nameInputTag.textContent = localStorage.getItem('name');
-            else localStorage.setItem('name',_.nameInputTag.textContent);
+            enterName();
         });
+        _.nameInputTag.addEventListener('keydown',function (e) {
+            if(e.code === 'Enter' || e.code === 'Tab'){
+                e.preventDefault();
+                enterName();
+                _.nameInputTag.blur();
+            }
+        })
 
     }
 
