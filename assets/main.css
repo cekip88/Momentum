@@ -1,0 +1,140 @@
+*{
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    list-style: none;
+    box-sizing: border-box;
+    outline: none;
+    text-decoration: none;
+}
+button:hover{
+    cursor: pointer;
+}
+body,.background div,.overlay{
+    width: 100vw;
+    height: 100vh;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.background,.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+.background div,.overlay{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.background div{
+    position: relative;
+    transition: .5s ease;
+}
+.background div:first-child{
+    z-index: 1;
+}
+.overlay{
+    background-image: url(overlay.png);
+    z-index: 10;
+}
+.info{
+    position: relative;
+    z-index: 100;
+    text-align: center;
+}
+.info,.target button{
+    color: #fff;
+    font-family: Arial;
+}
+
+
+.time{
+    font-size: 80px;
+}
+.date{
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.name{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.name span{
+    display: inline-block;
+    vertical-align: middle;
+}
+.name span:last-child{
+    margin-left: -5px;
+}
+
+#name{
+    min-width: 20px;
+}
+#name:focus{
+    border: 1px solid #fff;
+    padding: 0 5px;
+}
+
+.target{
+    display: flex;
+    flex-direction: column;
+}
+.target li{
+    margin-bottom: 5px;
+}
+.target li:first-child{
+    order: 999;
+}
+.target button span{
+    display: inline-block;
+    vertical-align: middle;
+}
+.target button{
+    font-size: 14px;
+}
+.target li:not(:first-child) button span:first-child{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+}
+
+@media screen and (min-width: 768px) {
+    .time{
+        font-size: 150px;
+    }
+    .date{
+        font-size: 50px;
+    }
+    .name{
+        font-size: 30px;
+    }
+    .target button{
+        font-size: 18px;
+    }
+    .target li:not(:first-child) button span:first-child{
+        width: 15px;
+        height: 15px;
+        border-width: 2px;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .name{
+        margin-top: 50px;
+    }
+    .name span:last-child{
+        margin-left: -8px;
+    }
+    .target{
+        margin-top: 50px;
+    }
+}
