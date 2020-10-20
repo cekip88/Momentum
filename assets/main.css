@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     background-color: transparent;
@@ -7,6 +7,9 @@
     box-sizing: border-box;
     outline: none;
     text-decoration: none;
+}
+*,*:before,*:after{
+    transition: .35s ease;
 }
 button:hover{
     cursor: pointer;
@@ -26,18 +29,12 @@ body{
     bottom: 0;
     right: 0;
     left: 0;
-}
-.background div,.overlay{
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
 }
-.background div{
-    position: relative;
-    transition: .5s ease;
-}
-.background div:first-child{
-    z-index: 1;
+.background{
+    transition: 1s ease;
 }
 .overlay{
     background-image: url(overlay.png);
@@ -48,9 +45,10 @@ body{
     z-index: 100;
     text-align: center;
 }
-.info,.target button{
+body,button{
     color: #fff;
     font-family: Arial;
+    font-size: 14px;
 }
 
 
@@ -58,9 +56,10 @@ body{
     font-size: 80px;
 }
 .date{
-    font-size: 30px;
-    margin-bottom: 20px;
+    font-size: 25px;
+    margin-bottom: 50px;
 }
+
 
 .name{
     font-size: 20px;
@@ -73,7 +72,6 @@ body{
 .name span:last-child{
     margin-left: -5px;
 }
-
 #name{
     min-width: 20px;
 }
@@ -82,31 +80,89 @@ body{
     padding: 0 5px;
 }
 
+
 .target{
     display: flex;
     flex-direction: column;
-}
-.target li{
-    margin-bottom: 5px;
-}
-.target li:first-child{
-    order: 999;
-}
-.target button span{
-    display: inline-block;
-    vertical-align: middle;
+    align-items: center;
+    margin-bottom: 20px;
 }
 .target button{
     font-size: 14px;
 }
-.target li:not(:first-child) button span:first-child{
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    border: 1px solid #fff;
-    border-radius: 3px;
+#add{
+    order:999
 }
 
+
+#bgcList{
+    color: #fff;
+    font-size: 14px;
+}
+
+
+.right-top{
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+.right-top>div{
+    width: 300px;
+    transform: scale(0);
+    padding: 20px;
+    background-color: rgba(255,255,255,.5);
+    border-radius: 5px;
+    position: absolute;
+    right: 5px;
+    top: 35px;
+}
+.burger{
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.burger span,.burger:after,.burger:before{
+    display: block;
+    content: '';
+    width: 30px;
+    height: 2px;
+    background-color: #fff;
+}
+.burger span{
+    margin: 8px 0;
+}
+.lang{
+    display: flex;
+    align-items: center;
+}
+.lang button{
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+.right-top-active .burger span{
+    opacity: 0;
+    visibility: hidden;
+}
+.right-top-active .burger:before{
+    transform: rotate(45deg) translate(7px,7px);
+}
+.right-top-active .burger:after{
+    transform: rotate(-45deg) translate(7.5px, -7px);
+}
+.right-top-active>div{
+    transform: scale(1);
+}
+.en #lang-btn-en{
+    border-color: #fff;
+}
+.ru #lang-btn-ru{
+    border-color: #fff;
+}
 @media screen and (min-width: 768px) {
     .time{
         font-size: 150px;
@@ -117,13 +173,8 @@ body{
     .name{
         font-size: 30px;
     }
-    .target button{
+    .target button,#bgcList{
         font-size: 18px;
-    }
-    .target li:not(:first-child) button span:first-child{
-        width: 15px;
-        height: 15px;
-        border-width: 2px;
     }
 }
 
@@ -131,10 +182,21 @@ body{
     .name{
         margin-top: 50px;
     }
+    .name span:nth-child(2):hover{
+        cursor: pointer;
+        text-decoration: underline;
+    }
     .name span:last-child{
         margin-left: -8px;
     }
     .target{
         margin-top: 50px;
+    }
+    #bgcList,.target button:last-child{
+        padding: 5px 20px;
+        border-radius: 20px;
+    }
+    #bgcList:hover,.target button:last-child:hover{
+        background-color: rgba(255,255,255,.5);
     }
 }
