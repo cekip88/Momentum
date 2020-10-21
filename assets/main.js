@@ -127,7 +127,19 @@ class Momentum {
 
     setBgPicture(i){
         const _ = this;
-        _.bgcTag.setAttribute('style',`background-image:url(assets/${_.bgc[i]})`);
+        let bgcInnerTag = document.createElement('DIV');
+        bgcInnerTag.setAttribute('style',`background-image:url(assets/${_.bgc[i]})`);
+        _.bgcTag.prepend(bgcInnerTag);
+
+        if(_.bgcTag.children.length > 1){
+            let last = _.bgcTag.lastChild;
+            let styles = last.getAttribute('style');
+            styles += ';opacity:0;transform:scale(1.15)';
+            last.setAttribute('style',`${styles}`);
+            setTimeout(function (e) {
+                last.remove();
+            },1000)
+        }
     }
     setNextBgc(){
         const _ = this;
