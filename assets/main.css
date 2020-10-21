@@ -165,6 +165,16 @@ body,button{
     .target{
         margin-top: 50px;
     }
+    .target>button{
+        margin-top: 20px;
+    }
+    .task-row{
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .task-row div{
+        margin-bottom: 0;
+    }
     #bgcList,.target>button{
         padding: 5px 20px;
         border-radius: 20px;
