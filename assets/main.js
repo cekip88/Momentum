@@ -17,10 +17,9 @@ class Momentum {
         _.init();
 
         document.getElementById('bgcList').addEventListener('click',function (e) {_.setNextBgc()});
-        document.getElementById('add').addEventListener('click',function (e) {
-            let btn = e.target;
-            _.addTask(btn)
-        });
+        document.querySelector('.quotes-change').addEventListener('click',function () {
+            _.showQuotes();
+        })
     }
 
     cityCheck(){
@@ -102,97 +101,37 @@ class Momentum {
         _.citySave(place);
     }
 
-    getTasks(){
-        let tasks = localStorage.getItem('momentum-tasks');
-        if(!tasks) return null;
-        tasks = JSON.parse(tasks);
-        return tasks
-    }
-    saveTasks(tasks){
-        tasks = JSON.stringify(tasks);
-        localStorage.setItem('momentum-tasks',tasks)
-    }
-    showTasks(){
-        let tasks = this.getTasks();
-        if(!tasks) return;
-
-        let btn = document.getElementById('add');
-        for (let task in tasks){
-            this.addTask(btn,tasks[task],task)
-        }
-    }
-    saveTask(taskNameCont){
-        let tasks = this.getTasks();
-        if (!tasks) tasks = {};
-
-        if(!taskNameCont.hasAttribute('data-task')) taskNameCont.setAttribute('data-task',`${taskNameCont.textContent}`);
-        tasks[`${taskNameCont.getAttribute('data-task')}`] = taskNameCont.textContent;
-
-        this.saveTasks(tasks)
-    }
-    addHandlers(items){
+    taskHandler(){
         const _ = this;
-        items.taskName.addEventListener('focusout', function (e) {
-            let taskName = e.target;
-            if (taskName.textContent === '') taskName.textContent = _.taskValue;
-            else _.saveTask(taskName);
+        const task = document.querySelector('.target');
+
+        let taskInLocal = localStorage.getItem('momentum-task');
+        if (taskInLocal) taskInLocal = JSON.parse(taskInLocal);
+
+        if(taskInLocal) task.textContent = taskInLocal;
+        let taskText = task.textContent;
+        task.addEventListener('focus',function () {
+            taskText = task.textContent;
+            setTimeout(function () {
+                task.textContent = '';
+            },10)
         });
-        items.taskName.addEventListener('focus', function (e) {
-            let taskName = e.target;
-            _.taskValue = taskName.textContent;
-            setTimeout(function (e) {taskName.textContent = ''},10)
+        task.addEventListener('focusout',function () {
+            if(task.textContent == '') {
+                task.textContent = taskText;
+                return
+            } else {
+                taskText = task.textContent;
+                taskText = JSON.stringify(taskText);
+                localStorage.setItem('momentum-task',taskText)
+            }
         });
-        items.taskName.addEventListener('keydown',function (e) {
+        task.addEventListener('keydown',function (e) {
             if(e.code === 'Tab' || e.code === 'Enter' || e.code === 'NumpadEnter'){
                 e.preventDefault();
-                items.taskName.blur();
+                task.blur();
             }
-        });
-        items.taskBtn.addEventListener('click',function (e) {
-            _.deleteTask(e);
         })
-    }
-    addTask(btn, name = '[Enter your task]', attr = null){
-        const _ = this;
-        if(!_.getTasks()) _.saveTasks({});
-
-        let task = document.createElement('DIV'),
-            taskName = document.createElement('DIV'),
-            taskBtn = document.createElement('BUTTON');
-
-        task.className = 'task-row';
-        taskName.setAttribute('contenteditable','true');
-        taskName.textContent = name;
-        if(attr) taskName.setAttribute('data-task', attr);
-
-        let cont = document.querySelector('.target');
-        task.append(taskName,taskBtn);
-        cont.append(task);
-
-        if(cont.children.length === 4) btn.classList.add('add-hidden');
-        this.addHandlers({taskName:taskName,taskBtn:taskBtn})
-    }
-    deleteTask(e){
-        let btn = e.target,
-            task = btn.parentElement,
-            taskName = task.firstChild.getAttribute('data-task');
-
-        let tasks = this.getTasks();
-
-        delete tasks[taskName];
-        task.setAttribute('style','transform:scale(0)');
-        setTimeout(function (e) {
-            task.remove();
-        },350);
-
-        this.saveTasks(tasks);
-
-        if(document.querySelector('.target').children.length < 5){
-            if (document.getElementById('add').classList.contains('add-hidden')){
-                document.getElementById('add').classList.remove('add-hidden')
-            }
-        }
-
     }
 
     bgcCheck(){
@@ -307,8 +246,6 @@ class Momentum {
 
         document.querySelector('.quotes-text').textContent = `"` + quotes[i]['text'] + `"`;
         document.querySelector('.quotes-author').textContent = quotes[i]['author'];
-
-        console.log(i,quotes.length)
     }
     async getQuotes(){
         const _ = this;
@@ -323,13 +260,13 @@ class Momentum {
 
         _.setGreetings(_.hour);
         _.setBgPicture(_.hour);
+        _.taskHandler();
         _.nameHandler();
         _.insertTime();
         setInterval(function () {
             _.bgcCheck();
             _.insertTime();
         },1000);
-        _.showTasks();
         _.cityCheck();
         _.showQuotes();
     }
