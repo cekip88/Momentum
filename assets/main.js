@@ -90,11 +90,11 @@ class Momentum {
         let weatherIcon = document.querySelector('.weather-icon');
         weatherIcon.className = `weather-icon owf owf-${weather.icon}`;
         let weatherTemp = document.querySelector('.weather-temp');
-        weatherTemp.textContent = 'Temperature = ' + weather.temp + 'C';
+        weatherTemp.textContent = 'Temperature: ' + weather.temp + 'C';
         let weatherHumidity = document.querySelector('.weather-humidity');
-        weatherHumidity.textContent = 'Humidity = ' + weather.humidity + '';
+        weatherHumidity.textContent = 'Humidity: ' + weather.humidity + '';
         let weatherWind = document.querySelector('.weather-wind');
-        weatherWind.textContent = 'Wind = ' + weather.wind + 'm/s';
+        weatherWind.textContent = 'Wind: ' + weather.wind + 'm/s';
 
         if(!place.parentElement.classList.contains('right-top-ready')){
             place.parentElement.classList.add('right-top-ready')
@@ -169,7 +169,7 @@ class Momentum {
         task.append(taskName,taskBtn);
         cont.append(task);
 
-        if(cont.children.length === 6) btn.classList.add('add-hidden');
+        if(cont.children.length === 4) btn.classList.add('add-hidden');
         this.addHandlers({taskName:taskName,taskBtn:taskBtn})
     }
     deleteTask(e){
@@ -187,7 +187,7 @@ class Momentum {
 
         this.saveTasks(tasks);
 
-        if(document.querySelector('.target').children.length < 7){
+        if(document.querySelector('.target').children.length < 5){
             if (document.getElementById('add').classList.contains('add-hidden')){
                 document.getElementById('add').classList.remove('add-hidden')
             }
@@ -298,6 +298,26 @@ class Momentum {
 
     }
 
+    async showQuotes(){
+        const _ = this;
+
+        let quotes = await _.getQuotes();
+        let i = Math.random();
+        i = Math.floor(i * 1643);
+
+        document.querySelector('.quotes-text').textContent = `"` + quotes[i]['text'] + `"`;
+        document.querySelector('.quotes-author').textContent = quotes[i]['author'];
+
+        console.log(i,quotes.length)
+    }
+    async getQuotes(){
+        const _ = this;
+        let url = 'https://type.fit/api/quotes';
+        const res = await fetch(url);
+        const data = await res.json();
+        return data;
+    }
+
     init(){
         const _ = this;
 
@@ -311,6 +331,7 @@ class Momentum {
         },1000);
         _.showTasks();
         _.cityCheck();
+        _.showQuotes();
     }
 }
 

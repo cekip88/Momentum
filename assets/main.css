@@ -64,7 +64,7 @@ body,button{
 }
 .date{
     font-size: 25px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 
@@ -131,6 +131,20 @@ body,button{
     font-size: 14px;
 }
 
+.quotes{
+    margin: 30px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 90%;
+    text-align: right;
+}
+.quotes-author{
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: .7;
+}
+
 
 .right-top{
     min-width: 130px;
@@ -142,12 +156,11 @@ body,button{
     align-items: flex-end;
     flex-direction: column;
     padding: 15px;
-    background-color: rgba(255,255,255,.5);
+    background-color: rgba(0,0,0,.5);
     border-radius: 10px;
 }
 .right-top-ready div{
     margin-bottom: 5px;
-    text-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 .weather-name{
     min-width: 10px;
@@ -160,10 +173,6 @@ body,button{
 
 @media screen and (min-width: 768px) {
 
-    body{
-        align-items: center;
-        padding-bottom: 0;
-    }
 
     .time{
         font-size: 150px;
@@ -219,5 +228,12 @@ body,button{
     }
     .right-top .weather-icon{
         font-size: 80px;
+    }
+
+    .quotes{
+        font-size: 18px;
+    }
+    .quotes-author{
+        font-size: 14px;
     }
 }
