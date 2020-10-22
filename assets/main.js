@@ -53,18 +53,25 @@ class Momentum {
         this.saveTasks(tasks)
     }
     addHandlers(items){
+        const _ = this;
         items.taskName.addEventListener('focusout', function (e) {
             let taskName = e.target;
-            if (taskName.textContent === '') taskName.textContent = this.taskValue;
-            else momentum.saveTask(taskName);
+            if (taskName.textContent === '') taskName.textContent = _.taskValue;
+            else _.saveTask(taskName);
         });
         items.taskName.addEventListener('focus', function (e) {
             let taskName = e.target;
-            this.taskValue = taskName.textContent;
+            _.taskValue = taskName.textContent;
             setTimeout(function (e) {taskName.textContent = ''},10)
         });
+        items.taskName.addEventListener('keydown',function (e) {
+            if(e.code === 'Tab' || e.code === 'Enter'){
+                e.preventDefault();
+                items.taskName.blur();
+            }
+        });
         items.taskBtn.addEventListener('click',function (e) {
-            momentum.deleteTask(e);
+            _.deleteTask(e);
         })
     }
     addTask(btn, name = '[Enter your task]', attr = null){
