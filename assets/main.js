@@ -1,5 +1,6 @@
 class Momentum {
-    path;
+    main;
+    weather;
     constructor() {
         const _ = this;
         _.timeTag = document.querySelector('.time');
@@ -20,8 +21,75 @@ class Momentum {
             let btn = e.target;
             _.addTask(btn)
         });
+    }
 
+    cityCheck(){
+        const _ = this;
+        _.weatherHandlers();
+        let name = localStorage.getItem('momentum-city');
+        if (!name) return;
+        name = JSON.parse(name);
+        document.querySelector('.weather-name').textContent = name;
+        if(name !== '[Choose your city]'){
+            _.showWeather();
+            document.querySelector('.right-top').classList.add('right-top-ready');
+        }
+    }
+    weatherHandlers(){
+        const _ = this;
+        let cityName = document.querySelector('.weather-name');
+        cityName.addEventListener('focus',function () {
+            _.city = cityName.textContent;
+            setTimeout(function () {
+                cityName.textContent = '';
+            },10)
+        });
+        cityName.addEventListener('focusout',function (e) {
+            if (cityName.textContent === '') cityName.textContent = _.city;
+            else {
+                let city = this.textContent;
+                city = JSON.stringify(city);
+                localStorage.setItem('momentum-city',city);
+                _.showWeather();
+                if(!cityName.parentElement.classList.contains('right-top-ready')){
+                    cityName.parentElement.classList.add('right-top-ready')
+                }
+            }
+        });
+        cityName.addEventListener('keydown',function (e) {
+            if(e.code === 'Tab' || e.code === 'Enter' || e.code === 'NumpadEnter'){
+                e.preventDefault();
+                document.querySelector('.weather-name').blur();
+            }
+        })
+    }
+    async getWeather(place) {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${place}&lang=en&appid=55bba09f2a7f439b7021c0eee31c709a&units=metric`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let weather = {};
+        weather.temp = data.main.temp;
+        weather.humidity = data.main.humidity;
+        weather.wind = data.wind.speed;
+        weather.icon = data.weather[0].id;
+        return weather;
+    }
+    async showWeather(){
+        const _ = this;
 
+        let place = document.querySelector('.weather-name').textContent;
+        if(place === '[Choose your city]') return;
+
+        let weather = await _.getWeather(place);
+
+        let weatherIcon = document.querySelector('.weather-icon');
+        weatherIcon.className = `weather-icon owf owf-${weather.icon}`;
+        let weatherTemp = document.querySelector('.weather-temp');
+        weatherTemp.textContent = 'Temperature = ' + weather.temp + 'C';
+        let weatherHumidity = document.querySelector('.weather-humidity');
+        weatherHumidity.textContent = 'Humidity = ' + weather.humidity + '';
+        let weatherWind = document.querySelector('.weather-wind');
+        weatherWind.textContent = 'Wind = ' + weather.wind + 'm/s';
     }
 
     getTasks(){
@@ -65,7 +133,7 @@ class Momentum {
             setTimeout(function (e) {taskName.textContent = ''},10)
         });
         items.taskName.addEventListener('keydown',function (e) {
-            if(e.code === 'Tab' || e.code === 'Enter'){
+            if(e.code === 'Tab' || e.code === 'Enter' || e.code === 'NumpadEnter'){
                 e.preventDefault();
                 items.taskName.blur();
             }
@@ -75,6 +143,9 @@ class Momentum {
         })
     }
     addTask(btn, name = '[Enter your task]', attr = null){
+        const _ = this;
+        if(!_.getTasks()) _.saveTasks({});
+
         let task = document.createElement('DIV'),
             taskName = document.createElement('DIV'),
             taskBtn = document.createElement('BUTTON');
@@ -197,7 +268,7 @@ class Momentum {
     nameHandler(){
         const _ = this;
 
-        if(!localStorage.getItem('momentum-name')) localStorage.setItem('momentum-name','[enter name]');
+        if(!localStorage.getItem('momentum-name')) localStorage.setItem('momentum-name','[Enter name]');
         _.nameInputTag.textContent = localStorage.getItem('momentum-name');
 
         function enterName(){
@@ -209,9 +280,8 @@ class Momentum {
             setTimeout(function () {_.nameInputTag.textContent = ''},10)});
         _.nameInputTag.addEventListener('focusout',function (e) {enterName()});
         _.nameInputTag.addEventListener('keydown',function (e) {
-            if(e.code === 'Enter' || e.code === 'Tab'){
+            if(e.code === 'Enter' || e.code === 'Tab' || e.code === 'NumpadEnter'){
                 e.preventDefault();
-                enterName();
                 _.nameInputTag.blur();
             }
         })
@@ -230,6 +300,7 @@ class Momentum {
             _.insertTime();
         },1000);
         _.showTasks();
+        _.cityCheck();
     }
 }
 
