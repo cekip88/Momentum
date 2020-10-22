@@ -30,7 +30,7 @@ class Momentum {
         if (!name) return;
         name = JSON.parse(name);
         document.querySelector('.weather-name').textContent = name;
-        if(name !== '[Choose your city]'){
+        if(name !== '[Choose your city]' && name !== 'City not found'){
             _.showWeather();
             document.querySelector('.right-top').classList.add('right-top-ready');
         }
@@ -47,13 +47,7 @@ class Momentum {
         cityName.addEventListener('focusout',function (e) {
             if (cityName.textContent === '') cityName.textContent = _.city;
             else {
-                let city = this.textContent;
-                city = JSON.stringify(city);
-                localStorage.setItem('momentum-city',city);
                 _.showWeather();
-                if(!cityName.parentElement.classList.contains('right-top-ready')){
-                    cityName.parentElement.classList.add('right-top-ready')
-                }
             }
         });
         cityName.addEventListener('keydown',function (e) {
@@ -63,10 +57,20 @@ class Momentum {
             }
         })
     }
+    citySave(cityName){
+        const _ = this;
+        let city = cityName.textContent;
+        city = JSON.stringify(city);
+        localStorage.setItem('momentum-city',city);
+    }
     async getWeather(place) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${place}&lang=en&appid=55bba09f2a7f439b7021c0eee31c709a&units=metric`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${place.textContent}&lang=en&appid=55bba09f2a7f439b7021c0eee31c709a&units=metric`;
         const res = await fetch(url);
         const data = await res.json();
+        if(data['cod'] == 404){
+            place.textContent = 'City not found';
+            return null
+        }
         let weather = {};
         weather.temp = data.main.temp;
         weather.humidity = data.main.humidity;
@@ -77,10 +81,11 @@ class Momentum {
     async showWeather(){
         const _ = this;
 
-        let place = document.querySelector('.weather-name').textContent;
-        if(place === '[Choose your city]') return;
+        let place = document.querySelector('.weather-name');
+        if(place.textContent === '[Choose your city]') return;
 
         let weather = await _.getWeather(place);
+        if(!weather) return;
 
         let weatherIcon = document.querySelector('.weather-icon');
         weatherIcon.className = `weather-icon owf owf-${weather.icon}`;
@@ -90,6 +95,11 @@ class Momentum {
         weatherHumidity.textContent = 'Humidity = ' + weather.humidity + '';
         let weatherWind = document.querySelector('.weather-wind');
         weatherWind.textContent = 'Wind = ' + weather.wind + 'm/s';
+
+        if(!place.parentElement.classList.contains('right-top-ready')){
+            place.parentElement.classList.add('right-top-ready')
+        }
+        _.citySave(place);
     }
 
     getTasks(){
