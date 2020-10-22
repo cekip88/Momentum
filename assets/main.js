@@ -7,11 +7,7 @@ class Momentum {
         _.dateTag = document.querySelector('.date');
         _.bgcTag = document.querySelector('.background');
         _.hour = new Date().getHours();
-        _.bgc = [
-            'night-01.jpg', 'night-02.jpg', 'night-03.jpg', 'night-04.jpg', 'night-05.jpg', 'night-06.jpg',
-            'morning-01.jpg', 'morning-02.jpg', 'morning-03.jpg', 'morning-04.jpg', 'morning-05.jpg', 'morning-06.jpg',
-            'day-01.jpg', 'day-02.jpg', 'day-03.jpg', 'day-04.jpg', 'day-05.jpg', 'day-06.jpg',
-            'evening-01.jpg', 'evening-02.jpg', 'evening-03.jpg', 'evening-04.jpg', 'evening-05.jpg', 'evening-06.jpg'];
+        _.bgc = [];
         _.nameInputTag = document.getElementById('name');
 
         _.init();
@@ -20,6 +16,32 @@ class Momentum {
         document.querySelector('.quotes-change').addEventListener('click',function () {
             _.showQuotes();
         })
+    }
+
+    bgcArrayFill(){
+        const _ = this;
+        let name = '';
+        for (let i = 0; i < 4; i++){
+            if (i === 0){
+                name = 'night-';
+            } else if(i === 1){
+                name = 'morning-';
+            } else if(i === 2){
+                name = 'day-'
+            } else {
+                name = 'evening-'
+            }
+
+            let k = Math.random() * 15;
+            k = Math.round(k);
+
+            for (let j = 0; j < 6; j++){
+                let l = k + '';
+                if (l.length < 2) l = '0' + l;
+                _.bgc.push(name+l+'.jpg');
+                k++;
+            }
+        }
     }
 
     cityCheck(){
@@ -257,6 +279,8 @@ class Momentum {
 
     init(){
         const _ = this;
+        _.bgcArrayFill();
+        console.log(_.bgc);
 
         _.setGreetings(_.hour);
         _.setBgPicture(_.hour);
